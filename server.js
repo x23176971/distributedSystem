@@ -51,6 +51,52 @@ server.addService(NoRobberyProto.NoRobbery.service, {
         }, 1000); // Countdown interval of 1 second
     },
 
+    // Service method to control lights
+    ControlLights: (call) => {
+        // Handling incoming data from the client
+        call.on('data', (request) => {
+            const { room, activate } = request;
+            if (activate) {
+                console.log(`Turning on the lights for 5 minutes in ${room}...\n`);
+                // Logic to activate the lights goes here
+            } else {
+                console.log(`No action for ${room}\n`);
+                // Logic to deactivate the lights goes here
+            }
+        });
+
+        // Handling end of the call
+        call.on('end', () => {
+            call.write({ message: 'Lights control stream ended.\n' });
+            call.end();
+        });
+    },
+    // Implementation of the MotionDetectionStream RPC method
+    MotionDetectionStream: (call) => {
+        // Simulated motion detection for each room
+        const rooms = ['living room', 'bedroom', 'kitchen', 'bathroom'];
+        
+        // Loop through each room and simulate motion detection
+        rooms.forEach((room, index) => {
+            // Simulated motion detection event with increasing delay
+            setTimeout(() => {
+                // Simulate motion detection with 1/3 chance
+                const motionDetected = Math.random() < 0.3;
+                // Running motion detection
+                console.log("Running motion detection in "+ room);
+                // Create message based on motion detection
+                const message = motionDetected ? `Motion detected in ${room}!` : `No motion detected in ${room}.`;
+                // Send response to the client
+                call.write({ message });
+            }, (index + 1) * 500); // Increasing delay for each room
+        });      
+        
+        // End the streaming call after 5 seconds
+        setTimeout(() => {
+            console.log("Motion Detecting Ending\n")
+            call.end();
+        }, 5000); 
+    }
 });
 
 // Binding and starting the server
