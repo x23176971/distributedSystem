@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package NoRobbery;
+
+// The NoRobbery service definition.
+service NoRobbery {
+  
+  // Music Unary
+  // RPC method to set a music timer.
+  rpc SetTimeMusic(MusicRequest) returns (MusicResponse) {} 
+
+  // Bidirectional streaming alarm system
+  // RPC method to activate the alarm system with bidirectional streaming.
+  rpc ActivateAlarm(stream AlarmRequest) returns (stream AlarmResponse) {}
+
+
+
+}
+
+// Music Request
+// Request message for setting music timer.
+message MusicRequest {
+  float time = 1; // Time duration for the music timer.
+}
+
+// Music Response
+// Response message for setting music timer.
+message MusicResponse {
+  string message = 1; // Message indicating the status of the operation.
+}
+
+// Alarm Request
+// Request message for activating the alarm.
+message AlarmRequest {
+  bool trigger = 1; // Boolean indicating whether to trigger the alarm.
+}
+
+// Alarm Response
+// Response message for activating the alarm.
+message AlarmResponse {
+  string message = 1; // Message indicating the status of the alarm activation.
+}
+
